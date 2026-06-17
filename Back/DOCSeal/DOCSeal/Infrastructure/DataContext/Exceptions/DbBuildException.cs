@@ -9,5 +9,5 @@ public class DbBuildValueException : Exception
 public class DbBuildAnyException : Exception
 {
     public DbBuildAnyException(Exception innerException) 
-        : base($"> I just shitting my pants with no any reason.", innerException) { }
+        : base("> I just shitting my pants with no any reason.", innerException) { }
 }

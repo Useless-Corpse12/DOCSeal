@@ -1,4 +1,4 @@
-namespace DOCSeal.Entities.Documents;
+namespace DOCSeal.Domain.Entities;
 
 public class Document : Entity
 {

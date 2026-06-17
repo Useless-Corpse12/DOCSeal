@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using DOCSeal.Infrastructure.Services.EmailService;
 
-namespace DOCSeal.Controllers;
+namespace DOCSeal.Presentation.Controllers;
 
 public class UserController : ApiController
 {
+    
     [HttpPost("[action]")]
     public async Task<IActionResult> RegisterUser()
     {

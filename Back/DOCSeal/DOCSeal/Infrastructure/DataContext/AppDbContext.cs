@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using DOCSeal.Domain.Entities.Documents;
-using DOCSeal.Domain.Entities.Organisations;
-using DOCSeal.Domain.Entities.Users;
+using DOCSeal.Domain.Entities;
 
-namespace DOCSeal.Infrastructure.DbContexts;
+namespace DOCSeal.Infrastructure.DataContext;
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) 

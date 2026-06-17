@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace DOCSeal.Controllers;
+namespace DOCSeal.Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

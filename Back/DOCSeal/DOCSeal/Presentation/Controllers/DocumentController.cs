@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace DOCSeal.Controllers;
+namespace DOCSeal.Presentation.Controllers;
 
 public class DocumentController : ApiController
 {

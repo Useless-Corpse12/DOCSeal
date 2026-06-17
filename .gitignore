@@ -62,6 +62,12 @@ bld/
 # Rider
 *.DotSettings.user
 
+appsettings.Development.json
+appsettings.Secrets.json
+appsettings.Production.json
+appsettings.*.json
+!appsettings.example.json
+
 # =========================
 # Node.js / Vite / React
 # =========================
