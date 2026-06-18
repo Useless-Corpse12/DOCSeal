@@ -1,4 +1,4 @@
-namespace DOCSeal.Domain.Entities;
+namespace DOCSeal.Domain.Entities.Organisations;
 
 public class Organisation : Entity
 {

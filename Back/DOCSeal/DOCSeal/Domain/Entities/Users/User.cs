@@ -1,10 +1,10 @@
-namespace DOCSeal.Domain.Entities;
+namespace DOCSeal.Domain.Entities.Users;
 
 public class User : Entity
 {
     public string Name { get; set; }
     public List<UserPosition>? Organisations { get; set; }
-    public string Pass { get; set; }
+    public string HashPass { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
     public string VerificationCode { get; set; }//Memory Cache
@@ -16,7 +16,7 @@ public class User : Entity
     public User(string userName, string password, string email, string phone,List<UserPosition>? organisations,string verificationCode)
     {
         Name = userName;
-        Pass = password;
+        HashPass = password;
         Email = email;
         Phone = phone;
         Organisations = organisations;

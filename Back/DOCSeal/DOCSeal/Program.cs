@@ -1,4 +1,3 @@
-using DOCSeal.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using DOCSeal.Infrastructure.DataContext;
 using DOCSeal.Infrastructure.DataContext.Exceptions;

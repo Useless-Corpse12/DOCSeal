@@ -1,23 +1,14 @@
-using DOCSeal.Application.Interfaces;
-
 namespace DOCSeal.Infrastructure.Security;
 
-public class PasswordHasher:IPasswordHasher
+public class PasswordHasher(string salt) : IPasswordHasher
 {
-    private readonly string _passwordSalt;
-
-    public PasswordHasher(string salt)
+    public string Create(string value)
     {
-        _passwordSalt = salt;
-    }
-    
-    public string PassHash(string value)
-    {
-        return Hasher.Create(value, _passwordSalt);
+        return Hasher.Create(value, salt);
     }
 
-    public bool PassValidate(string value, string hash)
+    public bool Validate(string value, string hash)
     {
-        return Hasher.Validate(value, _passwordSalt,hash);
+        return Hasher.Validate(value, salt,hash);
     }
 }
