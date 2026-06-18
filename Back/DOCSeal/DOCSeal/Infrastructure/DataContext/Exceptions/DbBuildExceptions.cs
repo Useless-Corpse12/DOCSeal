@@ -1,4 +1,4 @@
-namespace DOCSeal.Infrastructure.DataContext.Exceptions;
+namespace DOCSeal.Infrastructure.DataContext;
 
 public class DbBuildValueException : Exception
 {
