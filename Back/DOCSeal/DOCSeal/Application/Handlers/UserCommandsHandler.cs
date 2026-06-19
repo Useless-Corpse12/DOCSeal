@@ -1,33 +1,28 @@
 using DOCSeal.Infrastructure.DataContext;
 using DOCSeal.Infrastructure.DataContext.Exceptions;
+using DOCSeal.Infrastructure.Services.EmailService;
+using DOCSeal.Application.Commands.Users;
 using DOCSeal.Infrastructure.Security;
 
 namespace DOCSeal.Application.Handlers;
 
 
-public class UserCommandsHandler(AppDbContext dbContext, IConfiguration configuration, IPasswordHasher passwordHasher)
+public class UserCommandsHandler(AppDbContext dbContext, IConfiguration configuration, IPasswordHasher passwordHasher, IEmailSender emailSender)
 {
     private AppDbContext DbContext { get; } = dbContext;
-    public async Task<string> RegisterSelfAsync(RegisterSelfCommand cmd)
-    {
-        
-        
-        
-    }
-    
-    public async Task<string> RegisterOtherAsync(RegisterOtherCommand cmd)
+    public async Task<string> RegisterSelfAsync(RegistrationSelfCommand cmd)
     {
         
         
         
     }
 
-    public async Task<string> AuthAsync(AuthCommand cmd)
+    public async Task<string> AuthAsync(AuthorizationCommand cmd)
     {
         
     }
 
-    public async Task<string> VerifyAsync(VerifyCommand cmd)
+    public async Task<string> VerifyAsync(VerificationCommand cmd)
     {
     
         

@@ -6,7 +6,7 @@ public class Organisation : Entity
     public string Name { get; set; }
     public string? ImageUrl { get; set; }
 
-    public Organisation(List<Guid> employees, string name, string imageUrl)
+    public Organisation(Guid id,List<Guid> employees, string name, string imageUrl) :  base(id)
     {
         Employees = employees;
         Name = name;

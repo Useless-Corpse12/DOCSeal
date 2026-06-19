@@ -14,7 +14,9 @@ public class Document : Entity
     public DateTime DateCreated { get; set; }
     public DateTime DateStatusChanged { get; set; }
 
-    public Document(Guid organisationId, Guid senderId, List<Guid> signerIds, List<Guid> recipientIds, string title, string? description, string contentUrl, string? message, DocumentStatus status, DateTime dateCreated, DateTime dateStatusChanged)
+    public Document(Guid id,Guid organisationId, Guid senderId, List<Guid> signerIds, List<Guid> recipientIds, 
+        string title, string? description, string contentUrl, string? message, DocumentStatus status, 
+        DateTime dateCreated, DateTime dateStatusChanged) :  base(id)
     {
         OrganisationId = organisationId;
         SenderId = senderId;
