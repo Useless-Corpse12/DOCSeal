@@ -3,6 +3,7 @@ using DOCSeal.Infrastructure.DataContext;
 using DOCSeal.Infrastructure.DataContext.Exceptions;
 using DOCSeal.Infrastructure.Security;
 using DOCSeal.Infrastructure.Services.EmailService;
+using DOCSeal.Infrastructure.Services.VerificationCode;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,10 +53,10 @@ var salt = builder.Configuration.GetValue<string>("salt")
            ?? throw new InvalidOperationException("Соль не найдена!");
 
 builder.Services.AddSingleton<IPasswordHasher>(new PasswordHasher(salt));
+builder.Services.AddMemoryCache();
 
-// Регистрируем отправитель email
 builder.Services.AddScoped<IEmailSender, EmailSender>();
-
+builder.Services.AddScoped<VerificationCodeWorker>();
 // Add services to the container.
 
 
