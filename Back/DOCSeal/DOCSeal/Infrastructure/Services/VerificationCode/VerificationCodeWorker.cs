@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Caching.Memory;
+using DOCSeal.Application.Interfaces;
+
 namespace DOCSeal.Infrastructure.Services.VerificationCode;
 
 public class VerificationCodeWorker(IMemoryCache cache):IVerificationCodeService

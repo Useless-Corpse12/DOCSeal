@@ -1,4 +1,4 @@
-namespace DOCSeal.Infrastructure.Services.EmailService;
+namespace DOCSeal.Application.Interfaces;
 
 
 

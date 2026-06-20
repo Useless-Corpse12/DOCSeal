@@ -1,3 +1,3 @@
-namespace DOCSeal.Application.Commands.Users;
+namespace DOCSeal.Application.Features.Users.Authorization;
 
 public record AuthorizationCommand(string Login, string Password);

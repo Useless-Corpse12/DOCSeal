@@ -1,4 +1,4 @@
-namespace DOCSeal.Infrastructure.Services.VerificationCode;
+namespace DOCSeal.Application.Interfaces;
 
 public interface IVerificationCodeService
 {
