@@ -4,12 +4,13 @@ using DOCSeal.Infrastructure.DataContext.Exceptions;
 using DOCSeal.Infrastructure.Security;
 using DOCSeal.Infrastructure.Services.EmailService;
 using DOCSeal.Infrastructure.Services.VerificationCode;
+using DOCSeal.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile(
     "appsettings.Secrets.json", 
-    optional: true,
+    optional: false,
     reloadOnChange: true);
 
 #region Database
@@ -53,10 +54,17 @@ var salt = builder.Configuration.GetValue<string>("salt")
            ?? throw new InvalidOperationException("Соль не найдена!");
 
 builder.Services.AddSingleton<IPasswordHasher>(new PasswordHasher(salt));
+
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
-builder.Services.AddScoped<VerificationCodeWorker>();
+
+builder.Services.AddScoped<IVerificationCodeService,VerificationCodeWorker>();
+
+builder.Services.AddMediatR(cfg => 
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+
 // Add services to the container.
 
 

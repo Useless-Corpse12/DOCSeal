@@ -1,3 +1,5 @@
+using MediatR;
+
 namespace DOCSeal.Application.Features.Users.ChangePassword;
 
-public record ChangePasswordCommand(string OldPassword, string NewPassword);
+public record ChangePasswordCommand(Guid Id,string OldPassword, string NewPassword): IRequest<string>;

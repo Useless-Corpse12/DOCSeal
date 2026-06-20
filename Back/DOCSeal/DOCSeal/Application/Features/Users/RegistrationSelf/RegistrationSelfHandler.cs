@@ -1,21 +1,21 @@
 using DOCSeal.Application.Interfaces;
 using DOCSeal.Domain.Entities.Users;
 using DOCSeal.Infrastructure.DataContext;
+using MediatR;
 
 namespace DOCSeal.Application.Features.Users.RegistrationSelf;
 
 public class RegistrationSelfHandler(
     AppDbContext dbContext, 
-    IConfiguration configuration, 
     IPasswordHasher passwordHasher, 
     IEmailSender emailSender,
     IVerificationCodeService verificationCodeService
-)
+    ):IRequestHandler<RegistrationSelfCommand,Guid>
 
 {
     private AppDbContext DbContext { get; } = dbContext;
     
-    public async Task<string> RegistrationSelfAsync(RegistrationSelfCommand cmd)
+    public async Task<Guid> Handle(RegistrationSelfCommand cmd,CancellationToken cnt)
     {
         var existing = DbContext.Users.Any(x => x.Email == cmd.Email);
         if (existing)
@@ -33,6 +33,6 @@ public class RegistrationSelfHandler(
         DbContext.Users.Add(user);
         await DbContext.SaveChangesAsync();
         await emailSender.SendRegistrationCodeAsync(user.Email,verificationCodeService.GenerateAndSaveCode(user.Id));
-        return "Регистрация успешна! Код для активации выслан на почту";
+        return user.Id;
     }
 }

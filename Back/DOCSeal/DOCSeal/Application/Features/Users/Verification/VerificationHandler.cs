@@ -1,27 +1,25 @@
 using DOCSeal.Application.Interfaces;
 using DOCSeal.Infrastructure.DataContext;
+using MediatR;
 
 namespace DOCSeal.Application.Features.Users.Verification;
 
 public class VerificationHandler(
     AppDbContext dbContext, 
-    IConfiguration configuration, 
-    IPasswordHasher passwordHasher, 
-    IEmailSender emailSender,
     IVerificationCodeService verificationCodeService
-    )
+    ):IRequestHandler<VerificationCommand,Guid>
 
 {
     private AppDbContext DbContext { get; } = dbContext;
     
-    public async Task<string> VerifyAsync(VerificationCommand cmd)
+    public async Task<Guid> Handle(VerificationCommand cmd,CancellationToken cnt)
     {
         var user = DbContext.Users.FirstOrDefault(x=>x.Email == cmd.Login);
         if (user == null)
-            return "Такого пользователя нет";
+            throw new Exception("Такого пользователя нет");
 
         if (!verificationCodeService.ValidateCode(user.Id, cmd.VerificationCode))
-            return "Неверный код";
+            throw new Exception("Неверный код");
         
         verificationCodeService.RemoveCode(user.Id);
         user.IsVerified = true;
@@ -29,6 +27,6 @@ public class VerificationHandler(
         DbContext.Users.Update(user);
         await DbContext.SaveChangesAsync();
         
-        return "Аккаунт верифицирован!";
+        return user.Id;
     }
 }
