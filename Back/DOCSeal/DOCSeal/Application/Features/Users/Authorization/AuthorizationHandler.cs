@@ -17,10 +17,10 @@ public class AuthorizationHandler(
     {
         var user = await DbContext.Users.FirstOrDefaultAsync(x=>x.Email == cmd.Login);
         if (user == null)
-            throw new Exception("Такого пользователя нет");
+            throw new Exception("Неверный логин или пароль");
 
         if (!passwordHasher.Validate(cmd.Password, user.HashPass))
-            throw new Exception("пароль или логин не совпадает");
+            throw new Exception("Неверный логин или пароль");
         
         return user.Id;
     }

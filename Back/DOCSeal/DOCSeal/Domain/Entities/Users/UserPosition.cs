@@ -1,6 +1,6 @@
 namespace DOCSeal.Domain.Entities.Users;
 
-public class UserPosition
+public class UserPosition : Entity
 {
     public string PosName { get; set; }
     public Guid OrgId { get; set; }

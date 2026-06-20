@@ -25,7 +25,6 @@ public class RegistrationSelfHandler(
         var user = new User(
             id: Guid.NewGuid(),
             userName: cmd.Name,
-            organisations: null,
             password: passwordHasher.Create(cmd.Password),
             email: cmd.Email
             //,phone: request.Phone

@@ -11,13 +11,15 @@ public class User : Entity
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpiresAt { get; set; }
 
-    public User(Guid id,string userName, string password, string email,List<UserPosition>? organisations) : base(id)
+    public User(Guid id,string userName, string password, string email) : base(id)
     {
         Name = userName;
         HashPass = password;
         Email = email;
 //      Phone = phone; , string phone
-        Organisations = organisations;
+        Organisations = new List<UserPosition>();
         IsVerified = false;
     }
+    
+    protected User() { }
 }
