@@ -15,7 +15,6 @@ public class UserController(IMediator mediator) : ApiController
     private readonly IMediator _mediator = mediator;
     
     [HttpPost("[action]")]
-    [AllowAnonymous]
     public async Task<IActionResult> RegisterUser(RegistrationSelfCommand cmd)
     {
         if (!ModelState.IsValid)
@@ -29,8 +28,7 @@ public class UserController(IMediator mediator) : ApiController
         });
     }
     
-    [HttpGet("[action]")]
-    [AllowAnonymous]
+    [HttpPost("[action]")]
     public async Task<IActionResult> AuthorizeUser(AuthorizationCommand cmd)
     {
         if (!ModelState.IsValid)
@@ -45,7 +43,6 @@ public class UserController(IMediator mediator) : ApiController
     }
 
     [HttpPost("[action]")]
-    [AllowAnonymous]
     public async Task<IActionResult> VerifyUser(VerificationCommand cmd)
     {
         if (!ModelState.IsValid)
@@ -60,18 +57,15 @@ public class UserController(IMediator mediator) : ApiController
     }
     
     [HttpPost("[action]")]
-    [Authorize]
     public async Task<IActionResult> ChangePasswordUser(ChangePasswordCommand cmd)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-
-        var userIdString = HttpContext.User.Identity?.Name 
-                           ?? throw new UnauthorizedAccessException("Не авторизован");
         
-        var cmdWithId = cmd with { Id = Guid.Parse(userIdString) };
+        if (string.IsNullOrWhiteSpace(cmd.Login))
+            return BadRequest("Id не указан");
         
-        var result = await _mediator.Send(cmdWithId);
+        var result = await _mediator.Send(cmd);
         return Ok(new { Message = result });
     }
     
