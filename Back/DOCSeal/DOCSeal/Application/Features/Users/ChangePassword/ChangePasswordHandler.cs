@@ -9,19 +9,19 @@ namespace DOCSeal.Application.Features.Users.ChangePassword;
 public class ChangePasswordHandler(
     AppDbContext dbContext, 
     IPasswordHasher passwordHasher)
-    :IRequestHandler<ChangePasswordCommand, Guid>
+    :IRequestHandler<ChangePasswordCommand, string>
 {
     private AppDbContext DbContext { get; } = dbContext;
     
-    public async Task<Guid> Handle(ChangePasswordCommand cmd,CancellationToken cnt)
+    public async Task<string> Handle(ChangePasswordCommand cmd,CancellationToken cnt)
     {
-        var user = DbContext.Users.FirstOrDefault(x => x.Email == cmd.Login) ?? throw new EntityParamNotFound(typeof(User).ToString(),cmd.Login);
+        var user = DbContext.Users.FirstOrDefault(x => x.Id == cmd.Id) ?? throw new EntityParamNotFound(typeof(User).ToString(),cmd.Id.ToString());
         if (!passwordHasher.Validate(cmd.OldPassword ,user.HashPass))
             throw new Exception("Указан неверный старый пароль");
 
         user.HashPass = passwordHasher.Create(cmd.NewPassword);
         DbContext.Users.Update(user);
-        await DbContext.SaveChangesAsync();
-        return user.Id;
+        await DbContext.SaveChangesAsync(cnt);
+        return "Great";
     }
 }

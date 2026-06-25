@@ -2,4 +2,4 @@ using MediatR;
 
 namespace DOCSeal.Application.Features.Users.ChangePassword;
 
-public record ChangePasswordCommand(string Login,string OldPassword, string NewPassword): IRequest<Guid>;
+public record ChangePasswordCommand(string OldPassword, string NewPassword,Guid Id): IRequest<string>;

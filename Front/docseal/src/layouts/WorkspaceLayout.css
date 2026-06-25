@@ -1,0 +1,10 @@
+.workspace-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.workspace-main {
+    flex: 1;
+    padding: var(--space-xl);
+    background-color: var(--color-bg);
+}

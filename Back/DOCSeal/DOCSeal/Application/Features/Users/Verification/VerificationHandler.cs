@@ -25,7 +25,7 @@ public class VerificationHandler(
         user.IsVerified = true;
         
         DbContext.Users.Update(user);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(cnt);
         
         return user.Id;
     }

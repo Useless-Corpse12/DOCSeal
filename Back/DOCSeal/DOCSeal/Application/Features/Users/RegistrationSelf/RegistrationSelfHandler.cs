@@ -21,13 +21,13 @@ public class RegistrationSelfHandler(
         if (existing)
             throw new Exception("Пользователь с таким email уже зарегистрирован");
         
-        //var org = cmd.org
+        
         var user = new User(
             id: Guid.NewGuid(),
             userName: cmd.Name,
             password: passwordHasher.Create(cmd.Password),
+            phone: cmd.Phone,
             email: cmd.Email
-            //,phone: request.Phone
         );
         DbContext.Users.Add(user);
         await DbContext.SaveChangesAsync();

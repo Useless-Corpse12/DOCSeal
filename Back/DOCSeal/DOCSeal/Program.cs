@@ -1,10 +1,14 @@
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using DOCSeal.Infrastructure.DataContext;
 using DOCSeal.Infrastructure.DataContext.Exceptions;
-using DOCSeal.Infrastructure.Security;
+using DOCSeal.Infrastructure.Security.Hasher;
+using DOCSeal.Infrastructure.Security.JwtTokenGenerator;
 using DOCSeal.Infrastructure.Services.EmailService;
 using DOCSeal.Infrastructure.Services.VerificationCode;
 using DOCSeal.Application.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +30,6 @@ try
     if (string.IsNullOrEmpty(builder.Configuration.GetValue<string>("db:password")))
         throw new DbBuildValueException("db:password");
 
-    
     var dbConnString = $"Host={builder.Configuration.GetValue<string>("db:host")};" +
                        $"Port={builder.Configuration.GetValue("db:port", 5432)};" +
                        $"Database={builder.Configuration.GetValue<string>("db:name")};" +
@@ -59,25 +62,39 @@ builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
-builder.Services.AddScoped<IVerificationCodeService,VerificationCodeWorker>();
+builder.Services.AddScoped<IVerificationCodeService, VerificationCodeWorker>();
+
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
+var jwtSecretKey = builder.Configuration["JwtSettings:SecretKey"];
+var jwtIssuer = builder.Configuration["JwtSettings:Issuer"];
+var jwtAudience = builder.Configuration["JwtSettings:Audience"];
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
+        };
+    });
 
+builder.Services.AddAuthorization();
 
 // Add services to the container.
-
-
 builder.Services.AddControllers();
-
-
 builder.Services.AddOpenApi();
 
-
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -87,5 +104,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.Run();

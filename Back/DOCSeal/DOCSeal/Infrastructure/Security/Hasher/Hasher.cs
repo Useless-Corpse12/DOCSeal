@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace DOCSeal.Infrastructure.Security;
+namespace DOCSeal.Infrastructure.Security.Hasher;
 
 public class Hasher
 {
