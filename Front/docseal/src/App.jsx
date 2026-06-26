@@ -1,9 +1,13 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
 import AuthLayout from './layouts/AuthLayout';
 import WorkspaceLayout from './layouts/WorkspaceLayout';
 
 import Register from './pages/Register';
-import VerifyEmail from './pages/VerifyEmail';
+import VerifyEmail from './pages/Verify';
+import Login from './pages/Login';
 import Profile from './pages/Profile';
 import OrgSetup from './pages/OrgSetup';
 import Documents from './pages/Documents';
@@ -11,31 +15,44 @@ import OrgSettings from './pages/OrgSettings';
 
 function App() {
     return (
-        <Routes>
-            <Route path="/register" element={
-                <AuthLayout><Register /></AuthLayout>
-            } />
-            <Route path="/verify-email" element={
-                <AuthLayout><VerifyEmail /></AuthLayout>
-            } />
+        <AuthProvider>
+            <Routes>
+                {/* паблик */}
+                <Route path="/register" element={
+                    <AuthLayout><Register /></AuthLayout>
+                } />
+                <Route path="/verify-email" element={
+                    <AuthLayout><VerifyEmail /></AuthLayout>
+                } />
+                <Route path="/login" element={
+                    <AuthLayout><Login /></AuthLayout>
+                } />
 
-            <Route path="/profile" element={
-                <WorkspaceLayout><Profile /></WorkspaceLayout>
-            } />
-            <Route path="/org-setup" element={
-                <WorkspaceLayout><OrgSetup /></WorkspaceLayout>
-            } />
-            <Route path="/documents" element={
-                <WorkspaceLayout><Documents /></WorkspaceLayout>
-            } />
-            <Route path="/org-settings" element={
-                <WorkspaceLayout><OrgSettings /></WorkspaceLayout>
-            } />
+                {/* секур */}
+                <Route path="/profile" element={
+                    <ProtectedRoute>
+                        <WorkspaceLayout><Profile /></WorkspaceLayout>
+                    </ProtectedRoute>
+                } />
+                <Route path="/org-setup" element={
+                    <ProtectedRoute>
+                        <WorkspaceLayout><OrgSetup /></WorkspaceLayout>
+                    </ProtectedRoute>
+                } />
+                <Route path="/documents" element={
+                    <ProtectedRoute>
+                        <WorkspaceLayout><Documents /></WorkspaceLayout>
+                    </ProtectedRoute>
+                } />
+                <Route path="/org-settings" element={
+                    <ProtectedRoute>
+                        <WorkspaceLayout><OrgSettings /></WorkspaceLayout>
+                    </ProtectedRoute>
+                } />
 
-            <Route path="/" element={
-                <AuthLayout><Register /></AuthLayout>
-            } />
-        </Routes>
+                <Route path="/" element={<Navigate to="/register" replace />} />
+            </Routes>
+        </AuthProvider>
     );
 }
 
