@@ -24,8 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Application\Features\Documents\" />
-      <Folder Include="Application\Features\Organisation\" />
+      <Folder Include="Application\Documents\" />
+      <Folder Include="Application\Organisation\" />
       <Folder Include="Domain\" />
     </ItemGroup>
 

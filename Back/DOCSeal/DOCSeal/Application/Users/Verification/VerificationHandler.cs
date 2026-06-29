@@ -1,8 +1,8 @@
-using DOCSeal.Application.Interfaces;
+using DOCSeal.Infrastructure.Services.VerificationCode;
 using DOCSeal.Infrastructure.DataContext;
 using MediatR;
 
-namespace DOCSeal.Application.Features.Users.Verification;
+namespace DOCSeal.Application.Users.Verification;
 
 public class VerificationHandler(
     AppDbContext dbContext, 

@@ -1,20 +1,17 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using DOCSeal.Application.Features.Users;
 using MediatR;
-using DOCSeal.Application.Features.Users.RegistrationSelf;
-using DOCSeal.Application.Features.Users.Authorization;
-using DOCSeal.Application.Features.Users.Verification;
-using DOCSeal.Application.Features.Users.ChangePassword;
+using DOCSeal.Application.Users.RegistrationSelf;
+using DOCSeal.Application.Users.Authorization;
+using DOCSeal.Application.Users.Verification;
+using DOCSeal.Application.Users.ChangePassword;
+using DOCSeal.Application.Users.RefreshingToken;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DOCSeal.Presentation.Controllers;
 
 public class UserController(IMediator mediator) : ApiController
 {
-    
-    private readonly IMediator _mediator = mediator;
-    
     [HttpPost("[action]")]
     [AllowAnonymous]
     public async Task<IActionResult> RegisterUser(RegistrationSelfCommand cmd)
@@ -22,7 +19,7 @@ public class UserController(IMediator mediator) : ApiController
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var userId = await _mediator.Send(cmd);
+        var userId = await mediator.Send(cmd);
         return Ok(new 
         { 
             UserId = userId, 
@@ -37,7 +34,7 @@ public class UserController(IMediator mediator) : ApiController
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var token = await _mediator.Send(cmd);
+        var token = await mediator.Send(cmd);
         return Ok(new{Token = token});
     }
 
@@ -48,7 +45,7 @@ public class UserController(IMediator mediator) : ApiController
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var userId = await _mediator.Send(cmd);
+        var userId = await mediator.Send(cmd);
         return Ok(new 
         { 
             UserId = userId, 
@@ -67,10 +64,21 @@ public class UserController(IMediator mediator) : ApiController
     
         var cmdWithId = cmd with { Id = Guid.Parse(currentUserId) };
     
-        var result = await _mediator.Send(cmdWithId);
+        var result = await mediator.Send(cmdWithId);
         return Ok(new { Message = result });
     }
-    
-    
-    
+
+    [HttpPost("[action]")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RefreshUserToken(RefreshTokenCommand cmd)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        var result = await mediator.Send(cmd);
+        return Ok(new
+        {
+            result.AccessToken,
+            result.RefreshToken
+        });
+    }
 }

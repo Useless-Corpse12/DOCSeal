@@ -1,0 +1,53 @@
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.logo-img {
+    object-fit: contain;
+}
+
+.logo-text {
+    font-weight: 700;
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.logo-right {
+    flex-direction: row;
+}
+
+.logo-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-sm);
+}
+
+/* Размеры */
+.logo-sm .logo-img {
+    width: 64px;
+    height: 64px;
+}
+
+.logo-sm .logo-text {
+    font-size: 18px;
+}
+
+.logo-md .logo-img {
+    width: 96px;
+    height: 96px;
+}
+
+.logo-md .logo-text {
+    font-size: 24px;
+}
+
+.logo-lg .logo-img {
+    width: 128px;
+    height: 128px;
+}
+
+.logo-lg .logo-text {
+    font-size: 32px;
+}

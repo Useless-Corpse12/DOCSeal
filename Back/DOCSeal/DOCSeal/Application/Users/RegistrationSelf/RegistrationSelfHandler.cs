@@ -1,9 +1,11 @@
-using DOCSeal.Application.Interfaces;
+using DOCSeal.Infrastructure.Security.Hasher;
+using DOCSeal.Infrastructure.Services.EmailService;
+using DOCSeal.Infrastructure.Services.VerificationCode;
 using DOCSeal.Domain.Entities.Users;
 using DOCSeal.Infrastructure.DataContext;
 using MediatR;
 
-namespace DOCSeal.Application.Features.Users.RegistrationSelf;
+namespace DOCSeal.Application.Users.RegistrationSelf;
 
 public class RegistrationSelfHandler(
     AppDbContext dbContext, 
@@ -30,7 +32,7 @@ public class RegistrationSelfHandler(
             email: cmd.Email
         );
         DbContext.Users.Add(user);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(cnt);
         await emailSender.SendRegistrationCodeAsync(user.Email,verificationCodeService.GenerateAndSaveCode(user.Id));
         return user.Id;
     }

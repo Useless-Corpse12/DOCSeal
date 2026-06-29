@@ -3,14 +3,25 @@ using Microsoft.EntityFrameworkCore;
 using DOCSeal.Infrastructure.DataContext;
 using DOCSeal.Infrastructure.DataContext.Exceptions;
 using DOCSeal.Infrastructure.Security.Hasher;
-using DOCSeal.Infrastructure.Security.JwtTokenGenerator;
+using DOCSeal.Infrastructure.Security.TokenGenerator;
 using DOCSeal.Infrastructure.Services.EmailService;
 using DOCSeal.Infrastructure.Services.VerificationCode;
-using DOCSeal.Application.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") // Порт Vite
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 
 builder.Configuration.AddJsonFile(
     "appsettings.Secrets.json", 
@@ -64,7 +75,7 @@ builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.AddScoped<IVerificationCodeService, VerificationCodeWorker>();
 
-builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
@@ -101,6 +112,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();

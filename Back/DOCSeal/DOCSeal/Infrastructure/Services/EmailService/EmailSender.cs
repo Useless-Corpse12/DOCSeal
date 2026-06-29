@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
-using DOCSeal.Application.Interfaces;
 
 namespace DOCSeal.Infrastructure.Services.EmailService;
 

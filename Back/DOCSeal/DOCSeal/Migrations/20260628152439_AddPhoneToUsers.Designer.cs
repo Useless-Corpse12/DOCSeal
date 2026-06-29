@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DOCSeal.Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DOCSeal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260628152439_AddPhoneToUsers")]
+    partial class AddPhoneToUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,33 +93,6 @@ namespace DOCSeal.Migrations
                     b.ToTable("Organisations");
                 });
 
-            modelBuilder.Entity("DOCSeal.Domain.Entities.Users.RefreshToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("BrowserFingerPrint")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("RefreshTokenExpires")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Token");
-
-                    b.ToTable("RefreshTokens");
-                });
-
             modelBuilder.Entity("DOCSeal.Domain.Entities.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -142,6 +118,12 @@ namespace DOCSeal.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RefreshTokenExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -160,14 +142,26 @@ namespace DOCSeal.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserPositions");
+                    b.ToTable("UserPosition");
+                });
+
+            modelBuilder.Entity("DOCSeal.Domain.Entities.Users.UserPosition", b =>
+                {
+                    b.HasOne("DOCSeal.Domain.Entities.Users.User", null)
+                        .WithMany("Organisations")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("DOCSeal.Domain.Entities.Users.User", b =>
+                {
+                    b.Navigation("Organisations");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,34 +1,64 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userService } from '../services/userService.jsx';
-import { useAuth } from '../context/AuthContext.jsx';
+import { userService } from '../services/userService';
+import { useAuth } from '../context/AuthContext';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import './Register.css';
+import Logotype from '../components/ui/Logo';
 
 export default function Login() {
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const { login: saveToken } = useAuth();
     const navigate = useNavigate();
+    const { login } = useAuth();
+
+    const [form, setForm] = useState({
+        login: '',
+        password: ''
+    });
+    const [errors, setErrors] = useState({});
+    const [serverError, setServerError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (field) => (e) => {
+        setForm({ ...form, [field]: e.target.value });
+        if (errors[field]) setErrors({ ...errors, [field]: '' });
+        if (serverError) setServerError('');
+    };
+
+    const validate = () => {
+        const e = {};
+        if (!form.login.trim()) e.login = 'Введите логин';
+        if (!form.password) e.password = 'Введите пароль';
+        setErrors(e);
+        return Object.keys(e).length === 0;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
+        if (!validate()) return;
+        setLoading(true);
         try {
-            const data = await userService.login(login, password);
-            saveToken(data.token);
-            navigate('/dashboard');
+            const response = await userService.login(form.login, form.password);
+            login(response.token);
+            navigate('/profile');
         } catch (err) {
-            setError(err.response?.data?.message || 'Ошибка входа');
+            setServerError(err.response?.data?.message || 'Неверный логин или пароль');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Вход в DOCSeal</h2>
-            {error && <p style={{color: 'red'}}>{error}</p>}
-            <input placeholder="Логин" value={login} onChange={e => setLogin(e.target.value)} required />
-            <input type="password" placeholder="Пароль" value={password} onChange={e => setPassword(e.target.value)} required />
-            <button type="submit">Войти</button>
-        </form>
+        <div className="register-card">
+            <Logotype size="lg" position="bottom" />
+            <h1 className="register-title">Вход</h1>
+            {serverError && <div className="error-box">{serverError}</div>}
+            <form onSubmit={handleSubmit} className="form">
+                <Input label="Логин" value={form.login} onChange={handleChange('login')} error={errors.login} placeholder="Email или телефон" />
+                <Input label="Пароль" type="password" value={form.password} onChange={handleChange('password')} error={errors.password} placeholder="Введите пароль" />
+                <Button type="submit" disabled={loading}>{loading ? 'Вход...' : 'Войти'}</Button>
+            </form>
+            <p className="register-footer">Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+        </div>
     );
 }

@@ -1,12 +1,9 @@
 using Microsoft.Extensions.Caching.Memory;
-using DOCSeal.Application.Interfaces;
 
 namespace DOCSeal.Infrastructure.Services.VerificationCode;
 
 public class VerificationCodeWorker(IMemoryCache cache):IVerificationCodeService
 {
-    private readonly IMemoryCache _cache = cache;   
-    
     public string GenerateAndSaveCode(Guid userId)
     {
         var code = new Random().Next(100000, 999999).ToString();
@@ -15,7 +12,7 @@ public class VerificationCodeWorker(IMemoryCache cache):IVerificationCodeService
 //                                                                                                  \/
         var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10));//   <==
 //                                                                                                  /\
-        _cache.Set(cacheKey, code, cacheOptions);
+        cache.Set(cacheKey, code, cacheOptions);
         
         return code;
     }
@@ -24,7 +21,7 @@ public class VerificationCodeWorker(IMemoryCache cache):IVerificationCodeService
     {
         var cacheKey = $"vrf_code:{userId}";
         
-        if (_cache.TryGetValue(cacheKey, out string? cachedCode))
+        if (cache.TryGetValue(cacheKey, out string? cachedCode))
         {
             return cachedCode == code;
         }
@@ -36,6 +33,6 @@ public class VerificationCodeWorker(IMemoryCache cache):IVerificationCodeService
     {
         var cacheKey = $"vrf_code:{userId}";
         
-        _cache.Remove(cacheKey);
+        cache.Remove(cacheKey);
     }
 }

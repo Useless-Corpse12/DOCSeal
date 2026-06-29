@@ -1,4 +1,4 @@
-namespace DOCSeal.Application.Interfaces;
+namespace DOCSeal.Infrastructure.Security.Hasher;
 
 public interface IPasswordHasher
 {

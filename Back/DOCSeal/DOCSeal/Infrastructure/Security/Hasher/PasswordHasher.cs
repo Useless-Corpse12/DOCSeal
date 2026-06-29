@@ -1,5 +1,4 @@
 namespace DOCSeal.Infrastructure.Security.Hasher;
-using DOCSeal.Application.Interfaces;
 
 public class PasswordHasher(string salt) : IPasswordHasher
 {
