@@ -1,11 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using DOCSeal.Application.Users.RegistrationSelf;
-using DOCSeal.Application.Users.Authorization;
-using DOCSeal.Application.Users.Verification;
-using DOCSeal.Application.Users.ChangePassword;
-using DOCSeal.Application.Users.RefreshingToken;
+using DOCSeal.Application.Usrs;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DOCSeal.Presentation.Controllers;
@@ -35,7 +31,12 @@ public class UserController(IMediator mediator) : ApiController
             return BadRequest(ModelState);
 
         var token = await mediator.Send(cmd);
-        return Ok(new{Token = token});
+        return Ok( new
+            {
+                accessToken = token.AccessToken,
+                refreshToken = token.RefreshToken
+            }
+            );
     }
 
     [HttpPost("[action]")]
@@ -80,5 +81,36 @@ public class UserController(IMediator mediator) : ApiController
             result.AccessToken,
             result.RefreshToken
         });
+    }
+    
+    [HttpPost("[action]")]
+    [Authorize]
+    public async Task<IActionResult> Profile()
+    {
+        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    
+        if (string.IsNullOrWhiteSpace(currentUserId))
+            return Unauthorized("Не авторизован");
+    
+        var cmd = new GetUserInfoCommand(Guid.Parse(currentUserId));
+        var result = await mediator.Send(cmd);
+    
+        return Ok(new
+        {
+            result.Name,
+            result.Email,
+            result.Phone
+        });
+    }
+    
+    [HttpPost("[action]")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ReSendCode(ReSendCodeCommand cmd)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        var result = await mediator.Send(cmd);
+    
+        return Ok(result);
     }
 }

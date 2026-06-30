@@ -1,10 +1,10 @@
 using DOCSeal.Infrastructure.Security.Hasher;
-using DOCSeal.Domain.Entities.Users;
+using DOCSeal.Domain.Entities;
 using DOCSeal.Infrastructure.DataContext;
 using DOCSeal.Infrastructure.DataContext.Exceptions;
 using MediatR;
 
-namespace DOCSeal.Application.Users.ChangePassword;
+namespace DOCSeal.Application.Usrs;
 
 public class ChangePasswordHandler(
     AppDbContext dbContext, 

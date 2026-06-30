@@ -24,8 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Application\Documents\" />
-      <Folder Include="Application\Organisation\" />
+      <Folder Include="Application\Docs\" />
+      <Folder Include="Application\Orgs\MultiEmailInvite\" />
       <Folder Include="Domain\" />
     </ItemGroup>
 

@@ -1,4 +1,4 @@
-namespace DOCSeal.Domain.Entities.Documents;
+namespace DOCSeal.Domain.Entities;
 
 public class Document : Entity
 {
@@ -14,9 +14,9 @@ public class Document : Entity
     public DateTime DateCreated { get; set; }
     public DateTime DateStatusChanged { get; set; }
 
-    public Document(Guid id,Guid organisationId, Guid senderId, List<Guid> signerIds, List<Guid> recipientIds, 
-        string title, string? description, string contentUrl, string? message, DocumentStatus status, 
-        DateTime dateCreated, DateTime dateStatusChanged) :  base(id)
+    public Document(Guid id, Guid organisationId, Guid senderId, List<Guid> signerIds, List<Guid> recipientIds,
+        string title, string? description, string contentUrl, string? message, DocumentStatus status,
+        DateTime dateCreated, DateTime dateStatusChanged) : base(id)
     {
         OrganisationId = organisationId;
         SenderId = senderId;
@@ -30,4 +30,7 @@ public class Document : Entity
         DateCreated = dateCreated;
         DateStatusChanged = dateStatusChanged;
     }
+
+    protected Document() { }
+
 }

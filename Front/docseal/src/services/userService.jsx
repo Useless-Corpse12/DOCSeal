@@ -1,7 +1,7 @@
 import apiClient from '../api/client.jsx';
+import { getFingerprint } from '../Helpers/fingerPrint.jsx';
 
 export const userService = {
-
     register: (Name, Password, Email, Phone) => {
         return apiClient.post('/RegisterUser', {
             Name,
@@ -14,7 +14,8 @@ export const userService = {
     login: (Login, Password) => {
         return apiClient.post('/AuthorizeUser', {
             Login,
-            Password
+            Password,
+            FingerPrint: getFingerprint()
         }).then(res => res.data);
     },
 
@@ -25,10 +26,27 @@ export const userService = {
         }).then(res => res.data);
     },
 
+    getProfile: () => {
+        return apiClient.post('/Profile', {}).then(res => res.data);
+    },
+
     changePassword: (OldPassword, NewPassword) => {
         return apiClient.post('/ChangePasswordUser', {
             OldPassword,
             NewPassword
+        }).then(res => res.data);
+    },
+
+    refreshToken: (RefreshToken) => {
+        return apiClient.post('/RefreshUserToken', {
+            RefreshToken,
+            FingerPrint: getFingerprint()
+        }).then(res => res.data);
+    },
+
+    resendVerificationCode: (Email) => {
+        return apiClient.post('/ReSendCode', {
+            Email
         }).then(res => res.data);
     }
 };

@@ -1,10 +1,10 @@
-using DOCSeal.Domain.Entities.Users;
+using DOCSeal.Domain.Entities;
 using DOCSeal.Infrastructure.DataContext;
 using DOCSeal.Infrastructure.Security.TokenGenerator;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace DOCSeal.Application.Users.RefreshingToken;
+namespace DOCSeal.Application.Usrs;
 
 public record AuthResult(string AccessToken, string RefreshToken);
 

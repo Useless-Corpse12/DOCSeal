@@ -1,8 +1,9 @@
 using DOCSeal.Infrastructure.Services.VerificationCode;
 using DOCSeal.Infrastructure.DataContext;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace DOCSeal.Application.Users.Verification;
+namespace DOCSeal.Application.Usrs;
 
 public class VerificationHandler(
     AppDbContext dbContext, 
@@ -14,7 +15,7 @@ public class VerificationHandler(
     
     public async Task<Guid> Handle(VerificationCommand cmd,CancellationToken cnt)
     {
-        var user = DbContext.Users.FirstOrDefault(x=>x.Email == cmd.Login);
+        var user =  await DbContext.Users.FirstOrDefaultAsync(x=>x.Email == cmd.Login, cancellationToken: cnt);
         if (user == null)
             throw new Exception("Такого пользователя нет");
 

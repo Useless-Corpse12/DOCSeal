@@ -1,4 +1,4 @@
-using DOCSeal.Domain.Entities.Users;
+using DOCSeal.Domain.Entities;
 
 namespace DOCSeal.Infrastructure.Security.TokenGenerator;
 

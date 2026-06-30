@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using DOCSeal.Domain.Entities.Users;
+using DOCSeal.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DOCSeal.Infrastructure.Security.TokenGenerator;
@@ -44,7 +44,7 @@ public class TokenGenerator(IConfiguration configuration) : ITokenGenerator
         var refreshTokenDays = int.Parse(_configuration["JwtSettings:RefreshTokenLifeTimeDays"] ?? "30");//<<<<<токен лайфтайм
         var expiresAt = DateTime.UtcNow.AddDays(refreshTokenDays);
         
-        var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(48));
+        var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(96));
         
         return new TokenResult(token, expiresAt);
     }

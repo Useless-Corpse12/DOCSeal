@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace DOCSeal.Application.Users.Authorization;
+namespace DOCSeal.Application.Usrs;
 
 public record AuthorizationCommand(string Login, string Password, string FingerPrint): IRequest<AuthResult>;

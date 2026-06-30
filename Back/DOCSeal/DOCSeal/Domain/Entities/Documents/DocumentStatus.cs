@@ -1,4 +1,4 @@
-namespace DOCSeal.Domain.Entities.Documents;
+namespace DOCSeal.Domain.Entities;
 
 public enum DocumentStatus
 {

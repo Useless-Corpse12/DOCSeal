@@ -1,4 +1,4 @@
-namespace DOCSeal.Domain.Entities.Users;
+namespace DOCSeal.Domain.Entities;
 
 public class User : Entity
 {

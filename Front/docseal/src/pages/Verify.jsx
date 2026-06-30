@@ -53,7 +53,7 @@ export default function Verify() {
     const handleResend = async () => {
         setResendLoading(true);
         try {
-            // await userService.resendVerificationCode(email);
+            await userService.resendVerificationCode(email);
             setError('');
             alert('Код отправлен повторно на ' + email);
         } catch {
@@ -105,13 +105,13 @@ export default function Verify() {
 
             <div className="verify-footer">
                 <p>Не получили код?</p>
-                <button
+                <Button
                     className="resend-link"
                     onClick={handleResend}
                     disabled={resendLoading}
                 >
                     {resendLoading ? 'Отправка...' : 'Отправить повторно'}
-                </button>
+                </Button>
             </div>
 
             <p className="register-footer">

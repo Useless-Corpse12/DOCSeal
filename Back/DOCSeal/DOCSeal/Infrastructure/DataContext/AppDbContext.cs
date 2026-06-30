@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using DOCSeal.Domain.Entities.Users;
-using DOCSeal.Domain.Entities.Organisations;
-using DOCSeal.Domain.Entities.Documents;
+using DOCSeal.Domain.Entities;
 
 namespace DOCSeal.Infrastructure.DataContext;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
@@ -15,6 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     
     public DbSet<User> Users { get; set; }
     public DbSet<Organisation> Organisations { get; set; }
+    public DbSet<OrganisationInviteCode> OrganisationInviteCodes { get; set; }
     public DbSet<Document> Documents { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<UserPosition>  UserPositions { get; set; }

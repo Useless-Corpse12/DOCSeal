@@ -39,7 +39,8 @@ export default function Login() {
         setLoading(true);
         try {
             const response = await userService.login(form.login, form.password);
-            login(response.token);
+            login(response.accessToken);
+            localStorage.setItem('refresh_token', response.refreshToken);
             navigate('/profile');
         } catch (err) {
             setServerError(err.response?.data?.message || 'Неверный логин или пароль');

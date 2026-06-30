@@ -1,13 +1,16 @@
-namespace DOCSeal.Domain.Entities.Organisations;
+namespace DOCSeal.Domain.Entities;
 
 public class Organisation : Entity
 {
-    public List<Guid> Employees  { get; set; }
     public string Name { get; set; }
+    public List<string> PossiblePositions { get; set; }
 
-    public Organisation(Guid id,List<Guid> employees, string name) :  base(id)
+    public Organisation(Guid id, string name) :  base(id)
     {
-        Employees = employees;
         Name = name;
+        PossiblePositions = new List<string> { "Big Boss","Employee"};
     }
+    
+    protected Organisation()
+    {}
 }

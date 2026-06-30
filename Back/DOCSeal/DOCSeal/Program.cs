@@ -5,6 +5,7 @@ using DOCSeal.Infrastructure.DataContext.Exceptions;
 using DOCSeal.Infrastructure.Security.Hasher;
 using DOCSeal.Infrastructure.Security.TokenGenerator;
 using DOCSeal.Infrastructure.Services.EmailService;
+using DOCSeal.Infrastructure.Services.InviteCodeGenerator;
 using DOCSeal.Infrastructure.Services.VerificationCode;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -76,6 +77,8 @@ builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IVerificationCodeService, VerificationCodeWorker>();
 
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
+
+builder.Services.AddScoped<IInviteCodeGenerator, InviteCodeGenerator>();
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
