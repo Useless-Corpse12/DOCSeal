@@ -1,12 +1,11 @@
 .owner-org {
-    background-color: #f0f9ff; /* Светло-голубой фон для владельца */
-    border-left: 3px solid #3b82f6; /* Синяя полоска слева */
-    font-weight: 600;
+    background-color: rgba(243, 243, 91, 0.1);
+    font-weight: 100;
 }
 
 .owner-badge {
     margin-left: auto;
-    font-size: 14px;
+    font-size: 2px;
 }
 
 .create-org {

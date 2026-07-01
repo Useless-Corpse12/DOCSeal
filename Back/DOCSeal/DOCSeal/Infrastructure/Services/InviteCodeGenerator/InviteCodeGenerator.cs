@@ -15,7 +15,7 @@ public class InviteCodeGenerator(IConfiguration config) : IInviteCodeGenerator
         var claims = new List<Claim>
         {
             new("org_id", orgId.ToString()),
-            new("role", role),
+            new("rrole", role),
             new("is_one_time", isOneTime.ToString().ToLower()),
             new("duration_days", durationDays.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
@@ -52,10 +52,11 @@ public class InviteCodeGenerator(IConfiguration config) : IInviteCodeGenerator
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         }, out _);
-
+        
+        
         return new InvitePayload(
             OrgId: Guid.Parse(principal.FindFirst("org_id")?.Value!),
-            Role: principal.FindFirst("role")?.Value,
+            Role: principal.FindFirst("rrole").Value,
             IsOneTime: bool.Parse(principal.FindFirst("is_one_time")?.Value ?? "false"),
             DurationDays: int.Parse(principal.FindFirst("duration_days")?.Value ?? "0")
         );

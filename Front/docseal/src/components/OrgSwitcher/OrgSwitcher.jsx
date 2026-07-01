@@ -61,7 +61,6 @@ export default function OrgSwitcher() {
                             onClick={() => navigate(`/organisation/${org.id}`)}
                         >
                             <span className="org-name">{org.name}</span>
-                            {org.isOwner && <span className="owner-badge"></span>}
                         </div>
                     ))
                 )}

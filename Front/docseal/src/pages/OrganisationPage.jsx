@@ -17,7 +17,7 @@ export default function OrganisationPage() {
     const [editingRole, setEditingRole] = useState('');
     const [inviteCodes, setInviteCodes] = useState([]);
     const [inviteForm, setInviteForm] = useState({
-        role: 'Employee',
+        role: '',
         isOneTime: false,
         durationDays: 7,
         sendEmails: ''
@@ -79,7 +79,7 @@ export default function OrganisationPage() {
                 createdAt: new Date().toISOString()
             }]);
 
-            setInviteForm({ role: 'Employee', isOneTime: false, durationDays: 7, sendEmails: '' });
+            setInviteForm({ role: '', isOneTime: false, durationDays: 7, sendEmails: '' });
             setShowInviteModal(false);
             await loadInviteCodes();
         } catch (err) {
@@ -289,9 +289,7 @@ export default function OrganisationPage() {
                     <section className="invite-codes-section">
                         <div className="section-header">
                             <h2>Приглашения ({inviteCodes.length})</h2>
-                            <button className="btn-small btn-primary" onClick={() => setShowInviteModal(true)}>
-                                + Создать
-                            </button>
+
                         </div>
 
                         {inviteCodes.length === 0 ? (

@@ -15,25 +15,31 @@ public class AcceptInviteHandler(
     {
         var payload = codeGenerator.ValidateToken(cmd.Code);
         
-        var invite = await dbContext.OrganisationInviteCodes
-                         .FirstOrDefaultAsync(i => i.InviteCode == cmd.Code, cnt)
+        var invite = await dbContext.OrganisationInviteCodes.FirstOrDefaultAsync
+                         (i => i.InviteCode == cmd.Code, cnt)
                      ?? throw new Exception("Инвайт уже использован");
 
-        var inviteOrg = await dbContext.Organisations.FirstAsync
-            (or => or.Id == payload.OrgId, cnt) ?? throw new Exception("Оргу снесли пока он заходил, лол");
+        var inviteOrg = await dbContext.Organisations.FirstOrDefaultAsync
+            (or => or.Id == payload.OrgId, cnt) 
+            ?? throw new Exception("Организация не найдена");
 
-        if (!inviteOrg.PossiblePositions.Contains(payload.Role)) throw new Exception("steel jobless");
+        if (!inviteOrg.PossiblePositions.Contains(payload.Role))
+            throw new Exception($"Роль '{payload.Role}' не существует в организации");
 
         var alreadyInOrg = await dbContext.UserPositions
             .AnyAsync(up => up.UserId == cmd.UserId && up.OrgId == payload.OrgId, cnt);
             
         if (alreadyInOrg) return "Вы уже состоите в этой организации";
 
+        var correctRoleName = inviteOrg.PossiblePositions
+            .Where(p => p != null)
+            .First(p => p.Trim().Equals(payload.Role?.Trim(), StringComparison.OrdinalIgnoreCase));
+
         dbContext.UserPositions.Add(new UserPosition(
-            selfId:  Guid.NewGuid(),  
-            userId:  cmd.UserId,      
-            orgId:   payload.OrgId,   
-            posName: payload.Role
+            selfId: Guid.NewGuid(),  
+            userId: cmd.UserId,      
+            orgId: payload.OrgId,   
+            posName: correctRoleName
         ));
 
         if (payload.IsOneTime)
