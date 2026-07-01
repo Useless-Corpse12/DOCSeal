@@ -1,53 +1,41 @@
-.org-switcher {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
+.owner-org {
+    background-color: #f0f9ff; /* Светло-голубой фон для владельца */
+    border-left: 3px solid #3b82f6; /* Синяя полоска слева */
+    font-weight: 600;
 }
 
-.org-list {
-    max-height: 200px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
+.owner-badge {
+    margin-left: auto;
+    font-size: 14px;
 }
 
-.org-list::-webkit-scrollbar {
-    width: 4px;
+.create-org {
+    color: #6b7280;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.org-list::-webkit-scrollbar-track {
-    background: var(--color-bg);
-    border-radius: var(--radius-sm);
+.create-org:hover {
+    background-color: #f3f4f6;
+    color: #111827;
 }
 
-.org-list::-webkit-scrollbar-thumb {
-    background: var(--color-secondary);
-    border-radius: var(--radius-sm);
+.loading {
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.active-org {
+    background-color: #e0f2fe;
+    border-left: 4px solid #0284c7;
+    font-weight: bold;
 }
 
 .org-item {
-    padding: var(--space-sm) var(--space-md);
-    border-radius: var(--radius-sm);
-    font-size: 14px;
-    color: var(--color-secondary);
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .org-item:hover {
-    background-color: var(--color-bg);
-    color: var(--color-primary);
-}
-
-.org-item.active {
-    background-color: var(--color-bg);
-    color: var(--color-primary);
-    font-weight: 500;
-}
-
-.create-org {
-    margin-top: var(--space-xs);
-    color: var(--color-primary);
-    font-weight: 500;
+    background-color: #f3f4f6;
 }

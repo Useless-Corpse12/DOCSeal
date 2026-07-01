@@ -5,14 +5,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DOCSeal.Infrastructure.Services.InviteCodeGenerator;
 
-public class InviteCodeGenerator(IConfiguration config):IInviteCodeGenerator
+public class InviteCodeGenerator(IConfiguration config) : IInviteCodeGenerator
 {
-    public string GenerateToken(Guid orgId, string role, string? targetEmail, bool isOneTime, int durationDays)
+    public string GenerateToken(Guid orgId, string role, bool isOneTime, int durationDays)
     {
-        var secretKey = config["JwtSettings:SecretKey"] 
-            ?? throw new Exception("JwtSettings:SecretKey не настроен");
-        
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:SecretKey"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
@@ -20,12 +17,9 @@ public class InviteCodeGenerator(IConfiguration config):IInviteCodeGenerator
             new("org_id", orgId.ToString()),
             new("role", role),
             new("is_one_time", isOneTime.ToString().ToLower()),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+            new("duration_days", durationDays.ToString()),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-
-        if (!string.IsNullOrEmpty(targetEmail))
-            claims.Add(new Claim("target_email", targetEmail));
 
         var expires = durationDays > 0 
             ? DateTime.UtcNow.AddDays(durationDays) 
@@ -42,17 +36,11 @@ public class InviteCodeGenerator(IConfiguration config):IInviteCodeGenerator
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    
-    
     public InvitePayload ValidateToken(string token)
     {
-        var secretKey = config["JwtSettings:SecretKey"] 
-            ?? throw new Exception("JwtSettings:SecretKey не настроен");
-        
-        var key = Encoding.UTF8.GetBytes(secretKey);
-
+        var key = Encoding.UTF8.GetBytes(config["JwtSettings:SecretKey"]!);
         var tokenHandler = new JwtSecurityTokenHandler();
-        
+
         var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -63,21 +51,13 @@ public class InviteCodeGenerator(IConfiguration config):IInviteCodeGenerator
             ValidAudience = config["JwtSettings:Audience"],
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
-        }, out SecurityToken validatedToken);
-
-        var orgIdStr = principal.FindFirst("org_id")?.Value;
-        var role = principal.FindFirst("role")?.Value;
-        var targetEmail = principal.FindFirst("target_email")?.Value;
-        var isOneTimeStr = principal.FindFirst("is_one_time")?.Value;
-
-        if (string.IsNullOrEmpty(orgIdStr) || string.IsNullOrEmpty(role))
-            throw new Exception("Неверный формат токена приглашения");
+        }, out _);
 
         return new InvitePayload(
-            OrgId: Guid.Parse(orgIdStr),
-            Role: role,
-            TargetEmail: targetEmail,
-            IsOneTime: bool.Parse(isOneTimeStr ?? "false")
+            OrgId: Guid.Parse(principal.FindFirst("org_id")?.Value!),
+            Role: principal.FindFirst("role")?.Value,
+            IsOneTime: bool.Parse(principal.FindFirst("is_one_time")?.Value ?? "false"),
+            DurationDays: int.Parse(principal.FindFirst("duration_days")?.Value ?? "0")
         );
     }
 }

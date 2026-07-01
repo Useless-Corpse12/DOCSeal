@@ -2,7 +2,7 @@ import axios from 'axios';
 import { userService } from '../services/userService';
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:5273/api/User',
+    baseURL: 'http://localhost:5273/api/',
     headers: {
         'Content-Type': 'application/json',
     },

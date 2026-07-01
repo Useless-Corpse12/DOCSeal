@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
 import { useAuth } from '../context/AuthContext';
@@ -19,6 +19,12 @@ export default function Login() {
     const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        const pendingEmail = sessionStorage.getItem('pending_invite_email');
+        if (pendingEmail) {
+            setForm(prev => ({ ...prev, login: pendingEmail }));
+        }
+    }, []);
     const handleChange = (field) => (e) => {
         setForm({ ...form, [field]: e.target.value });
         if (errors[field]) setErrors({ ...errors, [field]: '' });
@@ -41,7 +47,13 @@ export default function Login() {
             const response = await userService.login(form.login, form.password);
             login(response.accessToken);
             localStorage.setItem('refresh_token', response.refreshToken);
-            navigate('/profile');
+
+            const pendingCode = sessionStorage.getItem('pending_invite_code');
+            if (pendingCode) {
+                navigate(`/invite?code=${pendingCode}`);
+            } else {
+                navigate('/profile');
+            }
         } catch (err) {
             setServerError(err.response?.data?.message || 'Неверный логин или пароль');
         } finally {

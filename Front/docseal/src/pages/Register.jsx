@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
 import Input from '../components/ui/Input';
@@ -18,6 +18,13 @@ export default function Register() {
     const [errors, setErrors] = useState({});
     const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const pendingEmail = sessionStorage.getItem('pending_invite_email');
+        if (pendingEmail) {
+            setForm({ ...form, email: pendingEmail });
+        }
+    }, []);
 
     const handleChange = (field) => (e) => {
         setForm({ ...form, [field]: e.target.value });
@@ -45,6 +52,12 @@ export default function Register() {
         setLoading(true);
         try {
             await userService.register(form.name, form.password, form.email, form.phone);
+
+            const pendingCode = sessionStorage.getItem('pending_invite_code');
+            if (pendingCode) {
+                sessionStorage.setItem('pending_invite_email', form.email);
+            }
+
             navigate('/verify-email', { state: { email: form.email } });
         } catch (err) {
             setServerError(err.response?.data?.message || 'Ошибка регистрации');

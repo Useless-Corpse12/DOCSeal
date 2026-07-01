@@ -12,12 +12,14 @@ import Profile from './pages/Profile';
 import OrgSetup from './pages/OrgSetup';
 import Documents from './pages/Documents';
 import OrgSettings from './pages/OrgSettings';
+import OrganisationPage from './pages/OrganisationPage';
+import InvitePage from './pages/InvitePage';
 
 function App() {
     return (
         <AuthProvider>
             <Routes>
-                {/* паблик */}
+                {/* Паблик */}
                 <Route path="/register" element={
                     <AuthLayout><Register /></AuthLayout>
                 } />
@@ -28,7 +30,9 @@ function App() {
                     <AuthLayout><Login /></AuthLayout>
                 } />
 
-                {/* секур */}
+                <Route path="/invite" element={<InvitePage />} />
+
+                {/* Секур */}
                 <Route path="/profile" element={
                     <ProtectedRoute>
                         <WorkspaceLayout><Profile /></WorkspaceLayout>
@@ -47,6 +51,11 @@ function App() {
                 <Route path="/org-settings" element={
                     <ProtectedRoute>
                         <WorkspaceLayout><OrgSettings /></WorkspaceLayout>
+                    </ProtectedRoute>
+                } />
+                <Route path="/organisation/:orgId" element={
+                    <ProtectedRoute>
+                        <WorkspaceLayout><OrganisationPage /></WorkspaceLayout>
                     </ProtectedRoute>
                 } />
 

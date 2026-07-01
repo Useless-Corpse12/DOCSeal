@@ -3,7 +3,7 @@ import { getFingerprint } from '../Helpers/fingerPrint.jsx';
 
 export const userService = {
     register: (Name, Password, Email, Phone) => {
-        return apiClient.post('/RegisterUser', {
+        return apiClient.post('/User/RegisterUser', {
             Name,
             Password,
             Email,
@@ -12,7 +12,7 @@ export const userService = {
     },
 
     login: (Login, Password) => {
-        return apiClient.post('/AuthorizeUser', {
+        return apiClient.post('/User/AuthorizeUser', {
             Login,
             Password,
             FingerPrint: getFingerprint()
@@ -20,32 +20,32 @@ export const userService = {
     },
 
     verify: (Login, VerificationCode) => {
-        return apiClient.post('/VerifyUser', {
+        return apiClient.post('/User/VerifyUser', {
             Login,
             VerificationCode
         }).then(res => res.data);
     },
 
     getProfile: () => {
-        return apiClient.post('/Profile', {}).then(res => res.data);
+        return apiClient.post('/User/Profile', {}).then(res => res.data);
     },
 
     changePassword: (OldPassword, NewPassword) => {
-        return apiClient.post('/ChangePasswordUser', {
+        return apiClient.post('/User/ChangePasswordUser', {
             OldPassword,
             NewPassword
         }).then(res => res.data);
     },
 
     refreshToken: (RefreshToken) => {
-        return apiClient.post('/RefreshUserToken', {
+        return apiClient.post('/User/RefreshUserToken', {
             RefreshToken,
             FingerPrint: getFingerprint()
         }).then(res => res.data);
     },
 
     resendVerificationCode: (Email) => {
-        return apiClient.post('/ReSendCode', {
+        return apiClient.post('/User/ReSendCode', {
             Email
         }).then(res => res.data);
     }

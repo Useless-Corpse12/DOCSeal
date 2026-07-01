@@ -15,7 +15,8 @@ public class CreateMyOrganisationHandler(AppDbContext dbContext):IRequestHandler
         var createdOrganisation = new Organisation
         (
             id: Guid.NewGuid(),
-            name: cmd.Name
+            name: cmd.Name,
+            possiblePositions:new List<string>{"Big Boss","Employee"}
         );
 
         var newPos = new UserPosition
@@ -25,7 +26,7 @@ public class CreateMyOrganisationHandler(AppDbContext dbContext):IRequestHandler
             userId: ownerUser.Id,
             posName: "Big Boss"
         );
-
+    
         dbContext.Organisations.Add(createdOrganisation);
         dbContext.UserPositions.Add(newPos);
         await dbContext.SaveChangesAsync(cnt);
